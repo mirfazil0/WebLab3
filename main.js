@@ -161,14 +161,12 @@ const LanguageManager = {
         document.documentElement.lang = lang;
         this.updateTexts();
         localStorage.setItem('language', lang);
-        
-        // Düzenleme formlarını güncelle
+
         if (document.querySelector('.edit-modal')) {
             const currentSection = document.querySelector('.edit-modal-content h2').textContent.toLowerCase().split(' ')[0];
             DataManager.populateEditForm(currentSection);
         }
-        
-        // Düzenleme butonlarını yeniden oluştur
+
         DataManager.setupEditButtons();
     },
 
@@ -181,7 +179,6 @@ const LanguageManager = {
             });
         });
 
-        // CV_DATA'yı güncelle
         if (this.currentLanguage === 'en') {
             CV_DATA.personalInfo.jobTitle = "Web & Game Developer | Programmer | InfoSec Specialist";
             CV_DATA.profile = "I am an experienced specialist in setting up security systems and managing IT infrastructure. I have skills in Windows and Linux systems, network security, and data protection. Additionally, I have knowledge in both backend and frontend web programming. I have experience in creating websites from scratch, writing programs, and developing PC or mobile games.";
@@ -290,7 +287,7 @@ const LanguageManager = {
             CV_DATA.references[1].position = "Rey Studio / Oyun Rəssamı";
         }
 
-        // Verileri yeniden render et
+ 
         DataManager.renderData();
     },
 
@@ -467,12 +464,11 @@ const DataManager = {
     },
 
     renderData() {
-        // Kişisel bilgileri güncelle
+
         document.querySelector('.name-title').textContent = CV_DATA.personalInfo.name;
         document.querySelector('.job-title').textContent = CV_DATA.personalInfo.jobTitle;
         document.querySelector('.profile-img').src = CV_DATA.personalInfo.profileImage;
 
-        // İletişim bilgilerini güncelle
         const contactContent = document.getElementById('contact-content');
         contactContent.innerHTML = `
             <p><a href="https://wa.me/${CV_DATA.contact.phone.replace(/\D/g, '')}" target="_blank">📞 ${CV_DATA.contact.phone}</a></p>
@@ -481,7 +477,6 @@ const DataManager = {
             <p><a href="https://${CV_DATA.contact.website}" target="_blank">🌐 ${CV_DATA.contact.website}</a></p>
         `;
 
-        // Eğitim bilgilerini güncelle
         const educationContent = document.getElementById('education-content');
         educationContent.innerHTML = CV_DATA.education.map(edu => `
             <div class="education-item">
@@ -492,7 +487,6 @@ const DataManager = {
             </div>
         `).join('');
 
-        // Yetenekleri güncelle
         const skillsContent = document.getElementById('skills-content');
         skillsContent.innerHTML = `
             <ul class="skills-list">
@@ -500,7 +494,6 @@ const DataManager = {
             </ul>
         `;
 
-        // Dilleri güncelle
         const languagesContent = document.getElementById('languages-content');
         languagesContent.innerHTML = `
             <ul class="languages-list">
@@ -508,10 +501,8 @@ const DataManager = {
             </ul>
         `;
 
-        // Profili güncelle
         document.querySelector('.profile p').textContent = CV_DATA.profile;
 
-        // Deneyimleri güncelle
         const experienceContent = document.getElementById('experience-content');
         experienceContent.innerHTML = CV_DATA.experience.map(exp => `
             <div class="work-item">
@@ -524,7 +515,7 @@ const DataManager = {
             </div>
         `).join('');
 
-        // Referansları güncelle
+
         const referencesContent = document.getElementById('references-content');
         referencesContent.innerHTML = `
             <div class="reference-grid">
@@ -541,11 +532,10 @@ const DataManager = {
     },
 
     setupEditButtons() {
-        // Önceki düzenleme butonlarını temizle
+
         const existingButtons = document.querySelectorAll('.edit-button');
         existingButtons.forEach(button => button.remove());
 
-        // Her bölüm için düzenleme butonu ekle
         const sections = ['contact', 'education', 'skills', 'languages', 'profile', 'experience', 'references'];
         sections.forEach(section => {
             const header = document.querySelector(`#${section}-content`).previousElementSibling;
@@ -669,7 +659,6 @@ const DataManager = {
                 break;
         }
 
-        // Modal butonlarını güncelle
         const modalButtons = document.querySelector('.modal-buttons');
         if (modalButtons) {
             modalButtons.innerHTML = `
