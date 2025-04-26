@@ -4,13 +4,13 @@ const CONFIG = {
     defaultLanguage: 'az',
     translations: {
         az: {
-            'contact': 'ƏLAQƏ',
-            'education': 'TƏHSİL',
-            'skills': 'BACARIQLAR',
-            'languages': 'DİLLƏR',
-            'profile': 'PROFİL',
-            'experience': 'TƏCRÜBƏ',
-            'references': 'İSTİNADLAR',
+            'contact': 'Əlaqə',
+            'education': 'Təhsil',
+            'skills': 'Bacarıqlar',
+            'languages': 'Dillər',
+            'profile': 'Profil',
+            'experience': 'Təcrübə',
+            'references': 'İstinadlar',
             'download-pdf': 'PDF Yüklə',
             'contact-form': 'Əlaqə Formu',
             'name': 'Ad Soyad',
@@ -40,13 +40,13 @@ const CONFIG = {
             edit: "Redaktə et"
         },
         en: {
-            'contact': 'CONTACT',
-            'education': 'EDUCATION',
-            'skills': 'SKILLS',
-            'languages': 'LANGUAGES',
-            'profile': 'PROFILE',
-            'experience': 'EXPERIENCE',
-            'references': 'REFERENCES',
+            'contact': 'Contact',
+            'education': 'Education',
+            'skills': 'Skills',
+            'languages': 'Languages',
+            'profile': 'Profile',
+            'experience': 'Experience',
+            'references': 'References',
             'download-pdf': 'Download PDF',
             'contact-form': 'Contact Form',
             'name': 'Full Name',
@@ -167,6 +167,9 @@ const LanguageManager = {
             const currentSection = document.querySelector('.edit-modal-content h2').textContent.toLowerCase().split(' ')[0];
             DataManager.populateEditForm(currentSection);
         }
+        
+        // Düzenleme butonlarını yeniden oluştur
+        DataManager.setupEditButtons();
     },
 
     updateTexts() {
@@ -538,6 +541,10 @@ const DataManager = {
     },
 
     setupEditButtons() {
+        // Önceki düzenleme butonlarını temizle
+        const existingButtons = document.querySelectorAll('.edit-button');
+        existingButtons.forEach(button => button.remove());
+
         // Her bölüm için düzenleme butonu ekle
         const sections = ['contact', 'education', 'skills', 'languages', 'profile', 'experience', 'references'];
         sections.forEach(section => {
@@ -554,14 +561,17 @@ const DataManager = {
         const modal = document.createElement('div');
         modal.className = 'edit-modal';
         const currentLang = LanguageManager.currentLanguage;
-        const editText = CONFIG.translations[currentLang].edit;
+        const translations = CONFIG.translations[currentLang];
+        const sectionTitle = translations[section] || section;
+        const editText = translations.edit;
+        
         modal.innerHTML = `
             <div class="edit-modal-content">
-                <h2>${section.charAt(0).toUpperCase() + section.slice(1)} ${editText}</h2>
+                <h2>${currentLang === 'az' ? sectionTitle + ' ' + editText : sectionTitle + ' ' + editText}</h2>
                 <div class="edit-form" id="edit-${section}"></div>
                 <div class="modal-buttons">
-                    <button onclick="DataManager.saveChanges('${section}')">${CONFIG.translations[currentLang].save}</button>
-                    <button onclick="DataManager.closeModal()">${CONFIG.translations[currentLang].cancel}</button>
+                    <button onclick="DataManager.saveChanges('${section}')">${translations.save}</button>
+                    <button onclick="DataManager.closeModal()">${translations.cancel}</button>
                 </div>
             </div>
         `;
@@ -593,7 +603,7 @@ const DataManager = {
                         <input type="text" value="${edu.link}" placeholder="${translations.link}">
                         <button onclick="DataManager.removeEducation(${index})">${translations.remove}</button>
                     </div>
-                `).join('') + `<button onclick="DataManager.addEducation()">${translations.add} ${translations.school}</button>`;
+                `).join('') + `<button onclick="DataManager.addEducation()">${currentLang === 'az' ? translations.education + ' ' + translations.add : translations.add + ' ' + translations.education.toLowerCase()}</button>`;
                 break;
             case 'skills':
                 form.innerHTML = `
@@ -604,7 +614,7 @@ const DataManager = {
                                 <button onclick="DataManager.removeSkill(${index})">${translations.remove}</button>
                             </div>
                         `).join('')}
-                        <button onclick="DataManager.addSkill()">${translations.add} ${translations.skill}</button>
+                        <button onclick="DataManager.addSkill()">${currentLang === 'az' ? translations.skill + ' ' + translations.add : translations.add + ' ' + translations.skill.toLowerCase()}</button>
                     </div>
                 `;
                 break;
@@ -617,7 +627,7 @@ const DataManager = {
                                 <button onclick="DataManager.removeLanguage(${index})">${translations.remove}</button>
                             </div>
                         `).join('')}
-                        <button onclick="DataManager.addLanguage()">${translations.add} ${translations.language}</button>
+                        <button onclick="DataManager.addLanguage()">${currentLang === 'az' ? translations.language + ' ' + translations.add : translations.add + ' ' + translations.language.toLowerCase()}</button>
                     </div>
                 `;
                 break;
@@ -640,11 +650,11 @@ const DataManager = {
                                     <button onclick="DataManager.removeDescription(${index}, ${descIndex})">${translations.remove}</button>
                                 </div>
                             `).join('')}
-                            <button onclick="DataManager.addDescription(${index})">${translations.add} ${translations.description}</button>
+                            <button onclick="DataManager.addDescription(${index})">${currentLang === 'az' ? translations.description + ' ' + translations.add : translations.add + ' ' + translations.description.toLowerCase()}</button>
                         </div>
-                        <button onclick="DataManager.removeExperience(${index})">${translations.remove} ${translations.title}</button>
+                        <button onclick="DataManager.removeExperience(${index})">${currentLang === 'az' ? translations.experience + ' ' + translations.remove : translations.remove + ' ' + translations.experience.toLowerCase()}</button>
                     </div>
-                `).join('') + `<button onclick="DataManager.addExperience()">${translations.add} ${translations.title}</button>`;
+                `).join('') + `<button onclick="DataManager.addExperience()">${currentLang === 'az' ? translations.experience + ' ' + translations.add : translations.add + ' ' + translations.experience.toLowerCase()}</button>`;
                 break;
             case 'references':
                 form.innerHTML = CV_DATA.references.map((ref, index) => `
@@ -655,7 +665,7 @@ const DataManager = {
                         <input type="email" value="${ref.email}" placeholder="${translations.email}">
                         <button onclick="DataManager.removeReference(${index})">${translations.remove}</button>
                     </div>
-                `).join('') + `<button onclick="DataManager.addReference()">${translations.add} ${translations.name}</button>`;
+                `).join('') + `<button onclick="DataManager.addReference()">${currentLang === 'az' ? translations.references + ' ' + translations.add : translations.add + ' ' + translations.references.toLowerCase()}</button>`;
                 break;
         }
 
@@ -832,7 +842,6 @@ function toggleAccordion(id) {
     header.classList.toggle('active');
 }
 
-// Sayfa yüklendiğinde tüm bölümleri bağlı olarak başlat
 document.addEventListener('DOMContentLoaded', function() {
     const sections = [
         'contact-content',
